@@ -1,0 +1,11 @@
+{
+  "name": "foxtrot",
+  "version": "0.0.0",
+  "description": "A simple routing network.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "Stephen Pair",
+  "license": "MIT"
+}

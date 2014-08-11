@@ -22,6 +22,7 @@ foxtrot.setupPeering(program.port, program.connect, console.log.bind(console));
 var net = require('net');
 foxtrot.on('peerConnect', function() {
   var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
+    console.log('connected to chat server');
     client.write(program.nick);
     process.stdout.pipe(client);
     client.pipe(process.stdout);

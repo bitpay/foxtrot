@@ -2,7 +2,6 @@ var foxtrot = require('..');
 var tracer = require('./tracer')(console);
 tracer.onNode(foxtrot);
 var Key = require('bitcore').Key;
-var net = require('net');
 
 var address = new Buffer('02b16cd9c5dd3ffb483b6cc9be0f68f64cbcec17df253ff91903d875e89f0608d4', 'hex');
 
@@ -45,19 +44,6 @@ foxtrot.on('peerConnect', function() {
     console.log('connection closed');
   });
 
-  // setup a connection for proxying http requests
-  var httpAddress = new Buffer('022a3d7cfcd86fb6d1e262f29be204ea28b62ce501247bd5ff870fa7837886011a', 'hex');
-  httpServer = net.createServer(function(tcpSocket) {
-    var httpSocket = foxtrot.connect({address: httpAddress, key: foxtrot.newKey()});
-    httpSocket.on('connect', function() {
-      console.log('connected to http proxy server');
-      tcpSocket.pipe(httpSocket);
-      httpSocket.pipe(tcpSocket);
-    });
-  });
-  httpServer.listen(8000);
-
-  // setup another connection for peering
   var peerAddress = new Buffer('0391f7cd3dece43d4a840e69a28f6d3ab0bd08c42991d2e1dbf0bed5581ef03460', 'hex');
   var peerSocket = foxtrot.connect({address: peerAddress, key: foxtrot.newKey()});
   peerSocket.on('connect', function() {

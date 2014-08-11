@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+// vi: ft=javascript
+
+var program = require('commander');
+
+function collect(val, items) {
+  items.push(val);
+  return items;
+};
+
+program
+  .version('0.0.1')
+  .option('-p, --port [number]', 'Port on which to listen for foxtrot peer connections')
+  .option('-c, --connect [host:port|port]', 'Foxtrot peers with which to connect', collect, [])
+  .option('-s, --server <address>', 'Foxtrot chat server address')
+  .option('-n, --nick [name]', 'Nickname to use [anon]', 'anon')
+  .parse(process.argv);
+
+var foxtrot = require('..');
+foxtrot.setupPeering(program.port, program.connect, console.log.bind(console));
+
+var net = require('net');
+foxtrot.on('peerConnect', function() {
+  var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
+    client.write(program.nick);
+    process.stdout.pipe(client);
+    client.pipe(process.stdout);
+  }); 
+});

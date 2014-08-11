@@ -39,6 +39,7 @@ bindWhenAccessed([
   'listenForPeers',
   'connectToPeer',
   'addPeer',
+  'setupPeering',
   'createServer',
   'connect',
   'newKey',

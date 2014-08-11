@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+// vi: ft=javascript
+
+var program = require('commander');
+
+function collect(val, items) {
+  items.push(val);
+  return items;
+};
+
+program
+  .version('0.0.1')
+  .option('-p, --port [number]', 'Port on which to listen for foxtrot peer connections [9333]', '9333')
+  .option('-c, --connect [host:port|port]', 'Foxtrot peers with which to connect', collect, [])
+  .parse(process.argv);
+
+var foxtrot = require('..');
+var Key = require('bitcore').Key;
+var tracer = require('./tracer')(console);
+var chatClients = [];
+
+foxtrot.setupPeering(program.port, program.connect, console.log.bind(console));
+
+// setup a chat server on a foxtrot endpoint
+var identity = Key.generateSync();
+console.log('chat server listening on '+identity.public.toString('hex'));
+var server = foxtrot.createServer({key: identity});
+server.on('connect', function(socket) {
+  var nick = null;
+  chatClients.push(socket);
+  socket.on('data', function(data) {
+    if(!nick) {
+      nick = data;
+      console.log(nick+' has joined the conversation');
+    } else {
+      chatClients.forEach(function(client) {
+        if(client !== socket) {
+          try {client.write(nick+'> '+data);} catch(e) {}
+        }
+      });
+    }
+  });
+});

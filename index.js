@@ -48,7 +48,8 @@ bindWhenAccessed([
 
 requireWhenAccessed([
   ['Router', './lib/Router'],
-  ['AESSocket', './lib/AESSocket']
+  ['AESSocket', './lib/AESSocket'],
+  ['KeyExchanger', './lib/KeyExchanger']
 ]);
 
 Object.defineProperty(exports, 'tracer', {

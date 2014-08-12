@@ -11,5 +11,8 @@
   "dependencies": {
     "commander": "^2.3.0",
     "bitcore": "^0.1.34"
+  },
+  "devDependencies": {
+    "async": "^0.9.0"
   }
 }

@@ -3,38 +3,15 @@ var async = require('async');
 var EventEmitter = require('events').EventEmitter;
 var KeyExchanger = require('..').KeyExchanger;
 var should = require('chai').should();
-
-function Socket() {
-  this.otherEnd = null;
-};
-util.inherits(Socket, EventEmitter);
-
-Socket.prototype.write = function(data) {
-  // split the data just for good measure (to make sure
-  // we don't have any accidental depenedencies on data
-  // chunking 
-  var self = this;
-  process.nextTick(function() {
-    if(data.length > 3) {
-      self.otherEnd.emit('data', data.slice(0,3));
-      self.otherEnd.emit('data', data.slice(3));
-    } else {
-      self.otherEnd.emit(data);
-    }
-  });
-}
+var Socket = require('../test-util/Socket');
 
 describe('key exchanger', function() {
   var clientSocket, serverSocket, client, server;
 
   beforeEach(function() {
-    clientSocket = new Socket();
-    serverSocket = new Socket();
-    clientSocket.otherEnd = serverSocket;
-    serverSocket.otherEnd = clientSocket;
-
-    client = KeyExchanger(clientSocket);
-    server = KeyExchanger(serverSocket);
+    socketPair = Socket.createPair();
+    client = KeyExchanger(socketPair[0]);
+    server = KeyExchanger(socketPair[1]);
   });
 
   it('should do something', function(testDone) {

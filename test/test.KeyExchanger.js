@@ -1,12 +1,10 @@
-var util = require('util');
 var async = require('async');
-var EventEmitter = require('events').EventEmitter;
 var KeyExchanger = require('..').KeyExchanger;
 var should = require('chai').should();
-var Socket = require('../test-util/Socket');
+var Socket = require('./util/Socket');
 
 describe('key exchanger', function() {
-  var clientSocket, serverSocket, client, server;
+  var socketPair, client, server;
 
   beforeEach(function() {
     socketPair = Socket.createPair();
@@ -14,7 +12,7 @@ describe('key exchanger', function() {
     server = KeyExchanger(socketPair[1]);
   });
 
-  it('should do something', function(testDone) {
+  it('should successfully handshake', function(testDone) {
     var csock, ssock;
     async.parallel(
       [

@@ -6,13 +6,15 @@ function node() {
 
 var requireWhenAccessed = function(names) {
   for(var i=0; i<names.length; i++) {
-    var name = names[i][0];
-    var file = names[i][1];
-    Object.defineProperty(exports, name, {
-      get: function() {
-        return require(file)
-      }
-    });
+    (function(entry) {
+      var name = entry[0];
+      var file = entry[1];
+      Object.defineProperty(exports, name, {
+        get: function() {
+          return require(file)
+        }
+      });
+    })(names[i]);
   }
 };
 

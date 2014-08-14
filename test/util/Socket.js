@@ -12,12 +12,12 @@ Socket.prototype.write = function(data) {
   // chunking 
   var self = this;
   process.nextTick(function() {
-    if(data.length > 3) {
-      self.otherEnd.emit('data', data.slice(0,3));
-      self.otherEnd.emit('data', data.slice(3));
-    } else {
-      self.otherEnd.emit(data);
-    }
+//    if(data.length > 3) {
+//      self.otherEnd.emit('data', data.slice(0,3));
+//      self.otherEnd.emit('data', data.slice(3));
+//    } else {
+      self.otherEnd.emit('data', data);
+//    }
   });
 }
 

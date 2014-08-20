@@ -50,6 +50,7 @@ bindWhenAccessed([
 
 requireWhenAccessed([
   ['Router', './lib/Router'],
+  ['Peer', './lib/Peer'],
   ['AESSocket', './lib/AESSocket'],
   ['KeyExchanger', './lib/KeyExchanger']
 ]);

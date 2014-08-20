@@ -26,4 +26,33 @@ describe('router', function() {
       testDone();
     });
   });
+  it('should be able to transport data', function(testDone) {
+    var msg1 = 'message one';
+    var msg2 = 'message two';
+    var gotClientMessage = false;
+    var gotServerMessage = false;
+    function checkDone() {
+      if(gotClientMessage && gotServerMessage) {
+        testDone();
+      }
+    };
+    var key = Key.generateSync();
+    var server = routerC.createServer({key: key});
+    var client = routerA.connect({address: key.public}, function() {
+      client.write(new Buffer(msg1));
+    });
+    server.on('connect', function(serverSocket) {
+      serverSocket.on('data', function(data) {
+        data.toString().should.equal(msg1);
+        gotServerMessage = true;
+        checkDone();
+      });
+      serverSocket.write(new Buffer(msg2));
+    });
+    client.on('data', function(data) {
+      data.toString().should.equal(msg2);
+      gotClientMessage = true;
+      checkDone();
+    });
+  });
 });

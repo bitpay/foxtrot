@@ -5,13 +5,15 @@ var SimSocket = require('./util/Socket');
 var Key = require('bitcore').Key;
 
 describe('router', function() {
+  var routerA, routerB, routerC;
   var client, server;
+
 
   beforeEach(function(done) {
     var linkA = SimSocket.createPair();
     var linkB = SimSocket.createPair();
     var routerA = Router();
-    var routerB = Router();
+    routerB = Router();
     var routerC = Router();
     routerA.addPeer(Peer(linkA[0], routerA));
     routerB.addPeer(Peer(linkA[1], routerB));
@@ -61,6 +63,12 @@ describe('router', function() {
   });
   it('should notify on close', function(testDone) {
     server.on('close', function() {
+      testDone();
+    });
+    client.end();
+  });
+  it('should trigger router connectionClose event', function(testDone) {
+    routerB.on('connectionClose', function(connection) {
       testDone();
     });
     client.end();

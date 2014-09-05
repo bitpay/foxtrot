@@ -14,12 +14,36 @@ program
   .option('-c, --connect [host:port|port]', 'Foxtrot peers with which to connect', collect, [])
   .parse(process.argv);
 
+var serverPort = parseInt(program.port);
+
 var foxtrot = require('..');
+
+// not real happy about this API
+foxtrot.options = {
+  discovery: {
+    connect: program.connect,
+    tcpserver: {
+      port: serverPort || 9333,
+      seek: serverPort ? false : true,
+    },
+    file: {},
+    dnsseed: {},
+    zeroconf: {
+      discover: true,
+      advertise: true,
+    },
+    rumor: {},
+    reconnect: {},
+  }
+};
+
+foxtrot.on('peerConnect', function(peer) {
+  //console.log('connected to peer ('+peer.descriptorString()+')');
+});
+
 var Key = require('bitcore').Key;
 var tracer = require('./tracer')(console);
 var chatClients = [];
-
-foxtrot.setupPeering(program.port, program.connect, console.log.bind(console));
 
 // setup a chat server on a foxtrot endpoint
 var identity = Key.generateSync();

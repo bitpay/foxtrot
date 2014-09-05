@@ -16,15 +16,41 @@ program
   .option('-n, --nick [name]', 'Nickname to use [anon]', 'anon')
   .parse(process.argv);
 
-var foxtrot = require('..');
-foxtrot.setupPeering(program.port, program.connect, console.log.bind(console));
+if(!program.server) program.help();
+var serverPort = parseInt(program.port);
 
-var net = require('net');
-foxtrot.on('peerConnect', function() {
-  var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
-    console.log('connected to chat server');
-    client.write(program.nick);
-    process.stdout.pipe(client);
-    client.pipe(process.stdout);
-  }); 
+var foxtrot = require('..');
+
+// not real happy about this API
+foxtrot.options = {
+  discovery: {
+    connect: program.connect,
+    tcpserver: {
+      port: serverPort || 9333,
+      seek: serverPort ? false : true,
+    },
+    file: {},
+    dnsseed: {},
+    zeroconf: {
+      discover: true,
+      advertise: true,
+    },
+    rumor: {},
+    reconnect: {},
+  }
+};
+
+foxtrot.on('peerConnect', function(peer) {
+  //console.log('connected to peer ('+peer.descriptorString()+')');
+});
+
+var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
+  console.log('connected to chat server');
+  client.write(program.nick);
+  process.stdout.pipe(client);
+  client.pipe(process.stdout);
+}); 
+client.on('error', function(err) {
+  console.log(err);
+  process.exit(1);
 });

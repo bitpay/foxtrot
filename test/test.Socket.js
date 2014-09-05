@@ -12,9 +12,9 @@ describe('router', function() {
   beforeEach(function(done) {
     var linkA = SimSocket.createPair();
     var linkB = SimSocket.createPair();
-    var routerA = Router();
-    routerB = Router();
-    var routerC = Router();
+    routerA = Router.noDiscovery();
+    routerB = Router.noDiscovery();
+    routerC = Router.noDiscovery();
     routerA.addPeer(Peer(linkA[0], routerA));
     routerB.addPeer(Peer(linkA[1], routerB));
     routerB.addPeer(Peer(linkB[0], routerB));

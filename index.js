@@ -1,6 +1,7 @@
 var defaultNode;
+module.exports.options = null;
 function node() {
-  defaultNode = defaultNode || require('./lib/Router')();
+  defaultNode = defaultNode || require('./lib/Router')(module.exports.options);
   return defaultNode;
 };
 

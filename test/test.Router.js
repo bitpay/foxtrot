@@ -11,9 +11,9 @@ describe('router', function() {
   beforeEach(function() {
     linkA = Socket.createPair();
     linkB = Socket.createPair();
-    routerA = Router();
-    routerB = Router();
-    routerC = Router();
+    routerA = Router.noDiscovery();
+    routerB = Router.noDiscovery();
+    routerC = Router.noDiscovery();
     routerA.addPeer(Peer(linkA[0], routerA));
     routerB.addPeer(Peer(linkA[1], routerB));
     routerB.addPeer(Peer(linkB[0], routerB));

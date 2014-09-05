@@ -41,11 +41,11 @@ foxtrot.options = {
 };
 
 foxtrot.on('peerConnect', function(peer) {
-  //console.log('connected to peer ('+peer.descriptorString()+')');
+  console.log('>>> connected to peer ('+peer.descriptorString()+')');
 });
 
 var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
-  console.log('connected to chat server');
+  console.log('>>> connected to chat server');
   client.write(program.nick);
   process.stdout.pipe(client);
   client.pipe(process.stdout);
@@ -53,4 +53,8 @@ var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, funct
 client.on('error', function(err) {
   console.log(err);
   process.exit(1);
+});
+client.on('close', function() {
+  console.log('>>> connection terminated');
+  process.exit();
 });

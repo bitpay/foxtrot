@@ -38,30 +38,57 @@ foxtrot.options = {
 };
 
 foxtrot.on('peerConnect', function(peer) {
-  //console.log('connected to peer ('+peer.descriptorString()+')');
+  console.log('>>> connected to peer ('+peer.descriptorString()+')');
 });
 
 var Key = require('bitcore').Key;
 var tracer = require('./tracer')(console);
 var chatClients = [];
 
+function sendToEveryone(message, originSocket) {
+  if(originSocket) {
+    process.stdout.write(message);
+  }
+  chatClients.forEach(function(client) {
+    if(client !== originSocket) {
+      try {client.write(message);} catch(e) {}
+    }
+  });
+};
+
+var localSocket = {
+  write: function(data) {
+    sendToEveryone('operator> '+data);
+  },
+  on: function() {},
+  once: function() {},
+  emit: function() {},
+};
+
 // setup a chat server on a foxtrot endpoint
 var identity = Key.generateSync();
-console.log('chat server listening on '+identity.public.toString('hex'));
+console.log('>>> chat server listening on '+identity.public.toString('hex'));
+process.stdout.pipe(localSocket);
 var server = foxtrot.createServer({key: identity});
 server.on('connect', function(socket) {
-  var nick = null;
+  socket.nick = null;
+  socket.clientNumber = chatClients.length;
   chatClients.push(socket);
   socket.on('data', function(data) {
-    if(!nick) {
-      nick = data;
-      console.log(nick+' has joined the conversation');
-    } else {
-      chatClients.forEach(function(client) {
-        if(client !== socket) {
-          try {client.write(nick+'> '+data);} catch(e) {}
+    if(!socket.nick) {
+      socket.nick = data.toString();;
+      for(var i=0; i<chatClients.length; i++) {
+        var chatClient = chatClients[i];
+        if((chatClient !== socket) && (chatClient.nick == socket.nick)) {
+          chatClients.splice(chatClient.clientNumber, 1);
+          socket.end('>>> that nickname is already taken\n');
+          return;
         }
-      });
+      }
+      var announcement = '>>> '+socket.nick+' has joined the conversation\n';
+      sendToEveryone(announcement, socket);
+    } else {
+      sendToEveryone(socket.nick+'> '+data, socket);
     }
   });
 });

@@ -10,7 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.3.0",
-    "bitcore": "^0.1.34"
+    "bitcore": "^0.1.34",
+    "mdns": "~2.2.0"
   },
   "devDependencies": {
     "async": "^0.9.0"

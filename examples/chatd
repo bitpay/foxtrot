@@ -40,6 +40,9 @@ foxtrot.options = {
 foxtrot.on('peerConnect', function(peer) {
   console.log('>>> connected to peer ('+peer.descriptorString()+')');
 });
+foxtrot.on('peerDisconnect', function(peer) {
+  console.log('>>> disconnected from peer ('+peer.descriptorString()+')');
+});
 
 var Key = require('bitcore').Key;
 var tracer = require('./tracer')(console);
@@ -90,5 +93,8 @@ server.on('connect', function(socket) {
     } else {
       sendToEveryone(socket.nick+'> '+data, socket);
     }
+  });
+  socket.on('close', function() {
+    chatClients.splice(socket.clientNumber, 1);
   });
 });

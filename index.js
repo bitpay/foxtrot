@@ -46,7 +46,8 @@ bindWhenAccessed([
   'createServer',
   'connect',
   'newKey',
-  'on'
+  'on',
+  'stop'
 ]);
 
 requireWhenAccessed([

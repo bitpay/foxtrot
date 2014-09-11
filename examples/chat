@@ -43,18 +43,22 @@ foxtrot.options = {
 foxtrot.on('peerConnect', function(peer) {
   console.log('>>> connected to peer ('+peer.descriptorString()+')');
 });
+foxtrot.on('peerDisconnect', function(peer) {
+  console.log('>>> disconnected from peer ('+peer.descriptorString()+')');
+});
 
+var connected = false;
 var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, function() {
   console.log('>>> connected to chat server');
+  connected = true;
   client.write(program.nick);
   process.stdout.pipe(client);
   client.pipe(process.stdout);
 }); 
 client.on('error', function(err) {
   console.log(err);
-  process.exit(1);
 });
 client.on('close', function() {
-  console.log('>>> connection terminated');
-  process.exit();
+  if(connected) console.log('>>> lost connection to chat server');
+  foxtrot.stop();
 });

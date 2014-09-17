@@ -77,7 +77,10 @@ if (program.key) {
 }
 console.log('>>> chat server listening on '+identity.public.toString('hex'));
 process.stdout.pipe(localSocket);
-var server = foxtrot.createServer({key: identity});
+var server = foxtrot.createServer({
+  key: identity,
+  advertise: false
+});
 server.on('connect', function(socket) {
   socket.nick = null;
   socket.clientNumber = chatClients.length;

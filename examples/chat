@@ -33,7 +33,7 @@ foxtrot.options = {
     dnsseed: {},
     zeroconf: {
       discover: true,
-      advertise: true,
+      advertise: false,
     },
     rumor: {},
     reconnect: {},

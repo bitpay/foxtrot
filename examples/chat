@@ -33,7 +33,7 @@ foxtrot.options = {
     dnsseed: {},
     zeroconf: {
       discover: true,
-      advertise: true,
+      advertise: false,
     },
     rumor: {},
     reconnect: {},
@@ -56,7 +56,7 @@ var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, funct
   client.pipe(process.stdout);
 }); 
 client.on('error', function(err) {
-  console.log(err);
+  console.log('client error: '+err);
 });
 client.on('close', function() {
   if(connected) console.log('>>> lost connection to chat server');

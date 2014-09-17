@@ -12,6 +12,7 @@ program
   .version('0.0.1')
   .option('-p, --port [number]', 'Port on which to listen for foxtrot peer connections [9333]', '9333')
   .option('-c, --connect [host:port|port]', 'Foxtrot peers with which to connect', collect, [])
+  .option('-k, --key [hex]', 'Private key for identity')
   .parse(process.argv);
 
 var serverPort = parseInt(program.port);
@@ -70,9 +71,16 @@ var localSocket = {
 
 // setup a chat server on a foxtrot endpoint
 var identity = Key.generateSync();
+if (program.key) {
+  identity.private = new Buffer(program.key, 'hex');
+  identity.regenerateSync();
+}
 console.log('>>> chat server listening on '+identity.public.toString('hex'));
 process.stdout.pipe(localSocket);
-var server = foxtrot.createServer({key: identity});
+var server = foxtrot.createServer({
+  key: identity,
+  advertise: false
+});
 server.on('connect', function(socket) {
   socket.nick = null;
   socket.clientNumber = chatClients.length;

@@ -31,10 +31,7 @@ foxtrot.options = {
     },
     file: {},
     dnsseed: {},
-    zeroconf: {
-      discover: true,
-      advertise: false,
-    },
+    zeroconf: {},
     rumor: {},
     reconnect: {},
   }

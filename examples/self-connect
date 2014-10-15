@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+ // vi: ft=javascript
+
+var program = require('commander');
+var Key = require('bitcore').Key;
+
+function collect(val, items) {
+  items.push(val);
+  return items;
+};
+
+program
+  .version('0.0.1')
+  .option('-p, --port [number]', 'Port on which to listen for foxtrot peer connections [9333]', '9333')
+  .option('-c, --connect [host:port|port]', 'Foxtrot peers with which to connect', collect, [])
+  .parse(process.argv);
+
+var serverPort = parseInt(program.port);
+
+var foxtrot = require('..');
+
+// not real happy about this API
+foxtrot.options = {
+  discovery: {
+    connect: program.connect,
+    tcpserver: {
+      port: serverPort || 9333,
+      seek: serverPort ? false : true,
+    },
+    file: {},
+    dnsseed: {},
+    zeroconf: {
+      discover: true,
+      advertise: true,
+    },
+    rumor: {},
+    reconnect: {},
+  }
+};
+
+foxtrot.on('peerConnect', function(peer) {
+  console.log('>>> connected to peer (' + peer.descriptorString() + ')');
+});
+foxtrot.on('peerDisconnect', function(peer) {
+  console.log('>>> disconnected from peer (' + peer.descriptorString() + ')');
+});
+
+var chatClients = [];
+
+function sendToEveryone(message, originSocket) {
+  if (originSocket) {
+    process.stdout.write(message);
+  }
+  chatClients.forEach(function(client) {
+    if (client !== originSocket) {
+      try {
+        client.write(message);
+      } catch (e) {}
+    }
+  });
+};
+
+var localSocket = {
+  write: function(data) {
+    sendToEveryone('operator> ' + data);
+  },
+  on: function() {},
+  once: function() {},
+  emit: function() {},
+};
+
+// setup a chat server on a foxtrot endpoint
+var identity = Key.generateSync();
+if (program.key) {
+  identity.private = new Buffer(program.key, 'hex');
+  identity.regenerateSync();
+}
+console.log('>>> chat server listening on ' + identity.public.toString('hex'));
+process.stdout.pipe(localSocket);
+var server = foxtrot.createServer({
+  key: identity,
+});
+server.on('connect', function(socket) {
+  socket.nick = null;
+  socket.clientNumber = chatClients.length;
+  chatClients.push(socket);
+  socket.on('data', function(data) {
+    if (!socket.nick) {
+      socket.nick = data.toString();;
+      for (var i = 0; i < chatClients.length; i++) {
+        var chatClient = chatClients[i];
+        if ((chatClient !== socket) && (chatClient.nick == socket.nick)) {
+          chatClients.splice(chatClient.clientNumber, 1);
+          socket.end('>>> that nickname is already taken\n');
+          return;
+        }
+      }
+      var announcement = '>>> ' + socket.nick + ' has joined the conversation\n';
+      sendToEveryone(announcement, socket);
+    } else {
+      sendToEveryone(socket.nick + '> ' + data, socket);
+    }
+  });
+  socket.on('close', function() {
+    chatClients.splice(socket.clientNumber, 1);
+  });
+});
+
+var client = foxtrot.connect({
+  address: identity.public
+}, function() {
+  console.log('>>> connected to chat server');
+  client.write('myself');
+  client.pipe(process.stdout);
+});

@@ -11,7 +11,8 @@
   "dependencies": {
     "bitcore": "^0.1.36",
     "commander": "^2.3.0",
-    "polo": "^0.6.0"
+    "polo": "^0.6.0",
+    "preconditions": "^1.0.7"
   },
   "devDependencies": {
     "async": "^0.9.0",

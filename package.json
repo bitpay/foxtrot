@@ -1,6 +1,6 @@
 {
   "name": "foxtrot",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple routing network.",
   "main": "index.js",
   "scripts": {

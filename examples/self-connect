@@ -76,7 +76,7 @@ if (program.key) {
   identity.regenerateSync();
 }
 console.log('>>> chat server listening on ' + identity.public.toString('hex'));
-process.stdout.pipe(localSocket);
+process.stdin.pipe(localSocket);
 var server = foxtrot.createServer({
   key: identity,
 });

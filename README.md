@@ -1,5 +1,8 @@
 
 # Foxtrot
+[![Build Status](https://travis-ci.org/bitpay/foxtrot.svg)](https://travis-ci.org/bitpay/foxtrot)
+[![Coverage Status](https://coveralls.io/repos/bitpay/foxtrot/badge.png?branch=master)](https://coveralls.io/r/bitpay/foxtrot?branch=master)
+
 
 A simple and secure routing network based on bitcoin cryptography.
 Foxtrot enables easy p2p communications and has built-in mechanisms
@@ -49,4 +52,3 @@ For more advanced examples and configuration, see the examples folder
 **Code released under [the MIT license](https://github.com/bitpay/foxtrot/blob/master/LICENSE).**
 
 Copyright 2014 BitPay, Inc.
-

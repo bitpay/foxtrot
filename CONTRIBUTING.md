@@ -1,0 +1,2 @@
+- Pull Requests must pass all tests.
+- New features should ship with new tests.

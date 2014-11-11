@@ -40,7 +40,7 @@ var client = foxtrot.connect({
   address: new Buffer(server, 'hex')
 }, function() {
   console.log('connected to server!');
-  process.stdout.pipe(client);
+  process.stdin.pipe(client);
   client.pipe(process.stdout);
 });
 ```

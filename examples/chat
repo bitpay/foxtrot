@@ -49,9 +49,9 @@ var client = foxtrot.connect({address: new Buffer(program.server, 'hex')}, funct
   console.log('>>> connected to chat server');
   connected = true;
   client.write(program.nick);
-  process.stdout.pipe(client);
+  process.stdin.pipe(client);
   client.pipe(process.stdout);
-}); 
+});
 client.on('error', function(err) {
   console.error(err);
   foxtrot.stop();
@@ -60,4 +60,3 @@ client.on('close', function() {
   if(connected) console.log('>>> lost connection to chat server');
   foxtrot.stop();
 });
-

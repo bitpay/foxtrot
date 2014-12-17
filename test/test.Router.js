@@ -19,13 +19,15 @@ describe('router', function() {
     routerB.addPeer(Peer(linkB[0], routerB));
     routerC.addPeer(Peer(linkB[1], routerC));
   });
+
   it('should make a connection', function(testDone) {
     var key = new PrivateKey();
-    var server = routerC.createServer({key: key});
+    var server = routerC.createServer({ key: key });
     var client = routerA.connect({address: key.publicKey}, function() {
       testDone();
     });
   });
+
   it('should be able to transport data', function(testDone) {
     var msg1 = 'message one';
     var msg2 = 'message two';

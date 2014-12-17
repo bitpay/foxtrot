@@ -1,8 +1,7 @@
-
 # Foxtrot
-[![Build Status](https://travis-ci.org/bitpay/foxtrot.svg)](https://travis-ci.org/bitpay/foxtrot)
-[![Coverage Status](https://coveralls.io/repos/bitpay/foxtrot/badge.png?branch=master)](https://coveralls.io/r/bitpay/foxtrot?branch=master)
-
+[![NPM Package](https://img.shields.io/npm/v/foxtrot.svg?style=flat-square)](https://www.npmjs.org/package/foxtrot)
+[![Build Status](https://img.shields.io/travis/bitpay/foxtrot.svg?branch=master&style=flat-square)](https://travis-ci.org/bitpay/foxtrot)
+[![Coverage Status](https://img.shields.io/coveralls/bitpay/foxtrot.svg?style=flat-square)](https://coveralls.io/r/bitpay/foxtrot)
 
 A simple and secure routing network based on bitcoin cryptography.
 Foxtrot enables easy p2p communications and has built-in mechanisms

@@ -2,7 +2,7 @@ var should = require('chai').should();
 var Router = require('..').Router;
 var Peer = require('..').Peer;
 var Socket = require('./util/Socket');
-var Key = require('bitcore').Key;
+var PrivateKey = require('bitcore').PrivateKey;
 
 describe('router', function() {
   var routerA, routerB, routerC;
@@ -20,9 +20,9 @@ describe('router', function() {
     routerC.addPeer(Peer(linkB[1], routerC));
   });
   it('should make a connection', function(testDone) {
-    var key = Key.generateSync();
+    var key = new PrivateKey();
     var server = routerC.createServer({key: key});
-    var client = routerA.connect({address: key.public}, function() {
+    var client = routerA.connect({address: key.publicKey}, function() {
       testDone();
     });
   });
@@ -36,9 +36,9 @@ describe('router', function() {
         testDone();
       }
     };
-    var key = Key.generateSync();
+    var key = new PrivateKey();
     var server = routerC.createServer({key: key});
-    var client = routerA.connect({address: key.public}, function() {
+    var client = routerA.connect({address: key.publicKey}, function() {
       client.write(new Buffer(msg1));
     });
     server.on('connect', function(serverSocket) {

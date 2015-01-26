@@ -2,12 +2,11 @@ var should = require('chai').should();
 var Router = require('..').Router;
 var Peer = require('..').Peer;
 var SimSocket = require('./util/Socket');
-var Key = require('bitcore').Key;
+var PrivateKey = require('bitcore').PrivateKey;
 
 describe('router', function() {
   var routerA, routerB, routerC;
   var client, server;
-
 
   beforeEach(function(done) {
     var linkA = SimSocket.createPair();
@@ -19,7 +18,7 @@ describe('router', function() {
     routerB.addPeer(Peer(linkA[1], routerB));
     routerB.addPeer(Peer(linkB[0], routerB));
     routerC.addPeer(Peer(linkB[1], routerC));
-    var key = Key.generateSync();
+    var key = new PrivateKey();
     client = null;
     server = null;
     routerC.createServer({key: key}, function(socket) {

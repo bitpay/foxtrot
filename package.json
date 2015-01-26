@@ -10,7 +10,7 @@
   "author": "Stephen Pair",
   "license": "MIT",
   "dependencies": {
-    "bitcore": "git://github.com/bitpay/bitcore#v0.8",
+    "bitcore": "^0.9.3",
     "bitcore-ecies": "0.0.1",
     "commander": "^2.3.0",
     "polo": "^0.6.0",

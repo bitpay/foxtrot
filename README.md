@@ -46,7 +46,7 @@ var client = foxtrot.connect({
 
 For more advanced examples and configuration, see the examples folder
 
-#License
+# License
 
 **Code released under [the MIT license](https://github.com/bitpay/foxtrot/blob/master/LICENSE).**
 
